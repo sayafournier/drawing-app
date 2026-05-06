@@ -1,0 +1,73 @@
+<body>
+  <nav></nav>
+  <main></main>
+</body>
+<style>
+  body {
+    background: linear-gradient(to left, red, violet);
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"> </script>
+<script>
+  /* global nn */
+
+  function save () {
+    const doc = nn.get('body').innerHTML
+    const blob = new Blob([doc], {
+      type: 'text/html'
+    })
+    const url = URL.createObjectURL(blob)
+    const a = nn.create('a')
+      .set('href', url)
+      .set('download', 'web-drawing.html')
+      .addTo('nav')
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  function draw () {
+
+    if (nn.mouseDown) {
+      // let x = nn.random(nn.width)
+      // let y = nn.random(nn.height)
+      let x = nn.mouseX
+      let y = nn.mouseY
+      nn.create('div')
+        .content('⬜️')
+        .css('user-select', 'none')
+        .position(x, y)
+        .scale(3)
+        .addTo('main');
+      let mirrorX = nn.width - x
+      nn.create('div')
+        .content('⬜️')
+        .css('user-select', 'none')
+        .position(mirrorX, y)
+        .scale(3)
+        .addTo('main');
+      let mirrorY = nn.height - y
+      nn.create('div')
+        .content('⬜️')
+        .css('user-select', 'none')
+        .position(x, mirrorY)
+        .scale(3)
+        .addTo('main')
+      nn.create('div')
+        .content('⬜️')
+        .css('user-select', 'none')
+        .position(mirrorX, mirrorY)
+        .scale(3)
+        .addTo('main')
+
+    }
+
+
+  }
+  nn.create('button')
+    .content('save')
+    .addTo('nav')
+    .on('click', save)
+
+  nn.on('mousemove', draw)
+</script>
